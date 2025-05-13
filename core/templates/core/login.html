@@ -1,0 +1,165 @@
+{% extends "core/base.html" %}
+
+{% block title %}Login - Wheels and Deals{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-0 align-items-center justify-content-center min-vh-75">
+        <!-- Left side - Login Form -->
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-car-side fa-3x text-primary mb-3"></i>
+                        <h2 class="fw-bold">Welcome Back!</h2>
+                        <p class="text-muted">Please login to your account</p>
+                    </div>
+                    
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Username field -->
+                        <div class="form-floating mb-3">
+                            <input type="text" name="username" class="form-control {% if form.username.errors %}is-invalid{% endif %}" id="id_username" placeholder="Username" required>
+                            <label for="id_username">
+                                <i class="fas fa-user me-2"></i>Username
+                            </label>
+                            {% if form.username.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.username.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Password field -->
+                        <div class="form-floating mb-3">
+                            <input type="password" name="password" class="form-control {% if form.password.errors %}is-invalid{% endif %}" id="id_password" placeholder="Password" required>
+                            <label for="id_password">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            {% if form.password.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.password.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember-me">
+                                <label class="form-check-label text-muted" for="remember-me">
+                                    Remember me
+                                </label>
+                            </div>
+                            <a href="#" class="text-primary text-decoration-none">Forgot password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                        
+                        <p class="text-center mb-0">
+                            Don't have an account? 
+                            <a href="{% url 'register' %}" class="text-primary text-decoration-none">
+                                Create one now
+                            </a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right side - Features -->
+        <div class="col-md-6 col-lg-5 d-none d-md-block ps-md-5">
+            <h3 class="h4 mb-4">Why Choose Wheels and Deals?</h3>
+            
+            <div class="d-flex align-items-start mb-4">
+                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3" style="padding: 12px;">
+                    <i class="fas fa-car fa-lg"></i>
+                </div>
+                <div>
+                    <h4 class="h6 mb-2">Premium Vehicle Selection</h4>
+                    <p class="text-muted mb-0">Access our curated collection of quality vehicles.</p>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-start mb-4">
+                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3" style="padding: 12px;">
+                    <i class="fas fa-dollar-sign fa-lg"></i>
+                </div>
+                <div>
+                    <h4 class="h6 mb-2">Competitive Financing</h4>
+                    <p class="text-muted mb-0">Get the best rates and flexible payment options.</p>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-start mb-4">
+                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3" style="padding: 12px;">
+                    <i class="fas fa-wrench fa-lg"></i>
+                </div>
+                <div>
+                    <h4 class="h6 mb-2">Professional Service</h4>
+                    <p class="text-muted mb-0">Expert maintenance and support for your vehicle.</p>
+                </div>
+            </div>
+            
+            <!-- Testimonial -->
+            <div class="card bg-light border-0 p-4 mt-5">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary text-white rounded-circle me-3" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">John Smith</h5>
+                        <p class="text-muted mb-0">Satisfied Customer</p>
+                    </div>
+                </div>
+                <p class="mb-0 fst-italic text-muted">
+                    "Wheels and Deals made my car buying experience smooth and enjoyable. Their team was professional and helped me find the perfect vehicle!"
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-floating > .form-control,
+    .form-floating > .form-control-plaintext {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+    }
+    
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+    
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .form-floating > input::placeholder {
+        color: transparent;
+    }
+    
+    .form-floating > input:not(:placeholder-shown) ~ label,
+    .form-floating > input:focus ~ label {
+        transform: scale(.85) translateY(-1rem) translateX(.15rem);
+        background-color: white;
+        padding: 0 .5rem;
+        height: auto;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+    }
+    
+    .form-floating > label i {
+        opacity: 0.7;
+    }
+</style>
+{% endblock %} 

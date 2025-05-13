@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Your Loans{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Your Loans</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Loan History</h2>
+        </div>
+        <div class="card-body">
+            {% if loans %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Amount</th>
+                                <th>Interest Rate</th>
+                                <th>Term (Months)</th>
+                                <th>Monthly Payment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for loan in loans %}
+                            <tr>
+                                <td>{{ loan.car }}</td>
+                                <td>${{ loan.amount }}</td>
+                                <td>{{ loan.interest_rate }}%</td>
+                                <td>{{ loan.term_months }}</td>
+                                <td>${{ loan.monthly_payment }}</td>
+                                <td>{{ loan.get_status_display }}</td>
+                                <td>
+                                    <a href="{% url 'loan_detail' loan.pk %}" class="btn btn-sm btn-info">View Details</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No loans found.</p>
+            {% endif %}
+            <a href="{% url 'loan_apply' %}" class="btn btn-primary">Apply for a New Loan</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

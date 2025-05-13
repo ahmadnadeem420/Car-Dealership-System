@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Buy Car - Wheels and Deals{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Confirm Purchase</h2>
+                </div>
+                <div class="card-body">
+                    <h4>{{ car.year }} {{ car.make }} {{ car.model }}</h4>
+                    <p><strong>Price:</strong> ${{ car.price }}</p>
+                    <p><strong>Mileage:</strong> {{ car.mileage }} miles</p>
+                    <p><strong>Condition:</strong> {{ car.condition }}</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Confirm Purchase</button>
+                            <a href="{% url 'car_detail' car.pk %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

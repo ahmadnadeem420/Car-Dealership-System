@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+{% block title %}Sales Dashboard - Wheels and Deals{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Sales Dashboard</h1>
+    <a href="{% url 'employee_report_create' %}" class="btn btn-primary mb-3">Send Report to Admin</a>
+    <h3>Sales Reports</h3>
+    <ul>
+        {% for report in reports %}
+        <li>{{ report.title }} ({{ report.created_at|date:"M d, Y" }})</li>
+        {% empty %}
+        <li>No reports found.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %} 

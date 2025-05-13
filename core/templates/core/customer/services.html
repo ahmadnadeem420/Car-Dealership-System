@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Your Services - Wheels and Deals{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Your Service Requests</h1>
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Service History</h2>
+        </div>
+        <div class="card-body">
+            {% if services %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Service Type</th>
+                                <th>Cost</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                            <tr>
+                                <td>{{ service.car }}</td>
+                                <td>{{ service.service_type }}</td>
+                                <td>${{ service.cost }}</td>
+                                <td>{{ service.get_status_display }}</td>
+                                <td>{{ service.created_at|date:"M d, Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No service requests found.</p>
+            {% endif %}
+            <a href="{% url 'service_request' %}" class="btn btn-primary">Request New Service</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

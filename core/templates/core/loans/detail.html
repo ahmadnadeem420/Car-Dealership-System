@@ -1,0 +1,235 @@
+{% extends 'core/base.html' %}
+{% load loan_filters %}
+
+{% block title %}Loan Details - {{ loan.car.year }} {{ loan.car.make }} {{ loan.car.model }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Loan Summary Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3 mb-0">Loan Details</h1>
+                        <span class="badge {% if loan.status == 'APPROVED' %}bg-success{% elif loan.status == 'REJECTED' %}bg-danger{% else %}bg-warning{% endif %} px-3 py-2">
+                            {{ loan.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3" style="padding: 12px;">
+                                    <i class="fas fa-money-bill fa-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-muted mb-0">Loan Amount</p>
+                                    <h3 class="h4 mb-0">{{ loan.amount|currency }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3" style="padding: 12px;">
+                                    <i class="fas fa-percentage fa-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-muted mb-0">Interest Rate</p>
+                                    <h3 class="h4 mb-0">{{ loan.interest_rate|percentage }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3" style="padding: 12px;">
+                                    <i class="fas fa-calendar fa-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-muted mb-0">Term Length</p>
+                                    <h3 class="h4 mb-0">{{ loan.term_months }} Months</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon bg-primary bg-gradient text-white rounded-3 me-3" style="padding: 12px;">
+                                    <i class="fas fa-clock fa-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-muted mb-0">Application Date</p>
+                                    <h3 class="h4 mb-0">{{ loan.created_at|date:"M d, Y" }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Details Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-4">Vehicle Information</h2>
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            {% if loan.car.image %}
+                            <img src="{{ loan.car.image.url }}" alt="{{ loan.car }}" class="img-fluid rounded">
+                            {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-car fa-3x text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="h5 mb-3">{{ loan.car.year }} {{ loan.car.make }} {{ loan.car.model }}</h3>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <p class="text-muted mb-1">Price</p>
+                                    <p class="h6">{{ loan.car.price|currency }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted mb-1">Mileage</p>
+                                    <p class="h6">{{ loan.car.mileage }} miles</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted mb-1">Condition</p>
+                                    <p class="h6">{{ loan.car.condition }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-muted mb-1">Status</p>
+                                    <p class="h6">{{ loan.car.get_status_display }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Schedule -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-4">Payment Schedule</h2>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Principal Amount</td>
+                                    <td class="text-end">{{ loan.amount|currency }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Monthly Payment</td>
+                                    <td class="text-end">
+                                        {% with monthly_payment=loan.amount|multiply:loan.interest_rate|divide:1200|multiply:loan.term_months|add:loan.amount|divide:loan.term_months %}
+                                            {{ monthly_payment|currency }}
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Total Interest</td>
+                                    <td class="text-end">
+                                        {% with total_interest=loan.amount|multiply:loan.interest_rate|divide:1200|multiply:loan.term_months %}
+                                            {{ total_interest|currency }}
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+                                <tr class="table-active fw-bold">
+                                    <td>Total Amount to Pay</td>
+                                    <td class="text-end">
+                                        {% with total_amount=loan.amount|multiply:loan.interest_rate|divide:1200|multiply:loan.term_months|add:loan.amount %}
+                                            {{ total_amount|currency }}
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="col-lg-4">
+            <!-- Customer Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-4">Customer Information</h2>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-primary text-white rounded-circle me-3" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h3 class="h5 mb-1">{{ loan.customer.user.get_full_name }}</h3>
+                            <p class="text-muted mb-0">Customer ID: {{ loan.customer.id }}</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-muted mb-1">Email</p>
+                        <p class="mb-0">{{ loan.customer.user.email }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-muted mb-1">Phone</p>
+                        <p class="mb-0">{{ loan.customer.user.phone_number }}</p>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Address</p>
+                        <p class="mb-0">{{ loan.customer.user.address }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-4">Actions</h2>
+                    {% if user.role == 'ADMIN' and loan.status == 'PENDING' %}
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success">
+                            <i class="fas fa-check me-2"></i>Approve Loan
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-times me-2"></i>Reject Loan
+                        </button>
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'customer_loans' %}" class="btn btn-outline-primary w-100 mt-3">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Loans
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .table th {
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+    }
+    
+    .table td {
+        vertical-align: middle;
+        color: var(--text-primary);
+    }
+    
+    .table-active {
+        background-color: var(--light-bg) !important;
+    }
+</style>
+{% endblock %} 

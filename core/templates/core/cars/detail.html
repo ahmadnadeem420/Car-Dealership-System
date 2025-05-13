@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ car.year }} {{ car.make }} {{ car.model }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ car.year }} {{ car.make }} {{ car.model }}</h1>
+            {% if car.image %}
+            <div class="card mb-4">
+                <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.make }} {{ car.model }}">
+            </div>
+            {% endif %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Car Details</h5>
+                    <p class="card-text">
+                        <strong>Price:</strong> ${{ car.price }}<br>
+                        <strong>Mileage:</strong> {{ car.mileage }} miles<br>
+                        <strong>Condition:</strong> {{ car.condition }}<br>
+                        <strong>Status:</strong> {{ car.get_status_display }}
+                    </p>
+                </div>
+            </div>
+
+            {% if car.status == 'AVAILABLE' %}
+                {% if user.is_authenticated and user.role == 'CUSTOMER' %}
+                    <a href="{% url 'car_buy' car.pk %}" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart me-2"></i>Purchase Car
+                    </a>
+                    <a href="{% url 'car_service' car.pk %}" class="btn btn-secondary">
+                        <i class="fas fa-wrench me-2"></i>Request Service
+                    </a>
+                {% elif not user.is_authenticated %}
+                    <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to purchase this car.</p>
+                {% endif %}
+            {% else %}
+                <p class="text-muted">This car is not available for purchase.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

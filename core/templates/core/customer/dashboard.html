@@ -1,0 +1,121 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Welcome to Your Dashboard</h1>
+
+    <!-- Loans Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Your Loans</h2>
+        </div>
+        <div class="card-body">
+            {% if loans %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for loan in loans %}
+                            <tr>
+                                <td>{{ loan.car }}</td>
+                                <td>${{ loan.amount }}</td>
+                                <td>{{ loan.get_status_display }}</td>
+                                <td>
+                                    <a href="{% url 'loan_detail' loan.pk %}" class="btn btn-sm btn-info">View Details</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No loans found.</p>
+            {% endif %}
+            <a href="{% url 'loan_apply' %}" class="btn btn-primary">Apply for a Loan</a>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Your Services</h2>
+        </div>
+        <div class="card-body">
+            {% if services %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Service Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                            <tr>
+                                <td>{{ service.car }}</td>
+                                <td>{{ service.service_type }}</td>
+                                <td>{{ service.get_status_display }}</td>
+                                <td>
+                                    <a href="{% url 'service_detail' service.pk %}" class="btn btn-sm btn-info">View Details</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No services found.</p>
+            {% endif %}
+            <a href="{% url 'service_request' %}" class="btn btn-primary">Request Service</a>
+        </div>
+    </div>
+
+    <!-- Transactions Section -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Your Transactions</h2>
+        </div>
+        <div class="card-body">
+            {% if transactions %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction.car }}</td>
+                                <td>{{ transaction.get_transaction_type_display }}</td>
+                                <td>${{ transaction.amount }}</td>
+                                <td>{{ transaction.transaction_date|date:"M d, Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No transactions found.</p>
+            {% endif %}
+            <a href="{% url 'car_list' %}" class="btn btn-primary">Browse Cars</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

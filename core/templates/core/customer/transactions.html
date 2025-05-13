@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Your Transactions{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Your Transactions</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Transaction History</h2>
+        </div>
+        <div class="card-body">
+            {% if transactions %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction.car }}</td>
+                                <td>{{ transaction.get_transaction_type_display }}</td>
+                                <td>${{ transaction.amount }}</td>
+                                <td>{{ transaction.transaction_date|date:"M d, Y" }}</td>
+                                <td>{{ transaction.status }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No transactions found.</p>
+            {% endif %}
+            <a href="{% url 'car_list' %}" class="btn btn-primary">Browse Cars</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

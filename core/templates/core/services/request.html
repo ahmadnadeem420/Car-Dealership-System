@@ -1,0 +1,197 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Request Service - Wheels and Deals{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3 mx-auto">
+                            <i class="fas fa-wrench fa-2x"></i>
+                        </div>
+                        <h2 class="h3 fw-bold">Request a Service</h2>
+                        <p class="text-muted">Schedule maintenance or repairs for your vehicle</p>
+                    </div>
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Car Selection -->
+                        <div class="mb-4">
+                            <label for="{{ form.car.id_for_label }}" class="form-label fw-medium">
+                                <i class="fas fa-car me-2"></i>Select Vehicle
+                            </label>
+                            {{ form.car }}
+                            {% if form.car.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.car.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                            {% if form.car.help_text %}
+                            <div class="form-text">{{ form.car.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Service Type -->
+                        <div class="mb-4">
+                            <label for="{{ form.service_type.id_for_label }}" class="form-label fw-medium">
+                                <i class="fas fa-tools me-2"></i>Service Type
+                            </label>
+                            {{ form.service_type }}
+                            {% if form.service_type.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.service_type.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                            {% if form.service_type.help_text %}
+                            <div class="form-text">{{ form.service_type.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-medium">
+                                <i class="fas fa-comment-alt me-2"></i>Description
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.description.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                            {% if form.description.help_text %}
+                            <div class="form-text">{{ form.description.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Preferred Date -->
+                        <div class="mb-4">
+                            <label for="{{ form.preferred_date.id_for_label }}" class="form-label fw-medium">
+                                <i class="fas fa-calendar-alt me-2"></i>Preferred Service Date
+                            </label>
+                            {{ form.preferred_date }}
+                            {% if form.preferred_date.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.preferred_date.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                            {% if form.preferred_date.help_text %}
+                            <div class="form-text">{{ form.preferred_date.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Urgent Checkbox -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                {{ form.urgent }}
+                                <label class="form-check-label" for="{{ form.urgent.id_for_label }}">
+                                    <i class="fas fa-exclamation-triangle text-warning me-2"></i>This is an urgent request
+                                </label>
+                                {% if form.urgent.help_text %}
+                                <div class="form-text">{{ form.urgent.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Service Request
+                            </button>
+                            <a href="{% url 'customer_services' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Services
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Service Information -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 mb-3">Service Information</h3>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h4 class="h6 mb-3">Available Services</h4>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>Regular Maintenance
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>Repairs
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>Inspections
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>Body Work
+                                </li>
+                                <li>
+                                    <i class="fas fa-check text-success me-2"></i>Detailing
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="h6 mb-3">What to Expect</h4>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="fas fa-clock text-primary me-2"></i>Quick Response Time
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-user-shield text-primary me-2"></i>Expert Technicians
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-tools text-primary me-2"></i>Quality Parts
+                                </li>
+                                <li>
+                                    <i class="fas fa-shield-alt text-primary me-2"></i>Service Warranty
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .feature-icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+    }
+    
+    .form-text {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+    }
+    
+    .invalid-feedback {
+        font-size: 0.875rem;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,274 @@
+WHEELS AND DEALS DJANGO PROJECT DOCUMENTATION
+
+Table of Contents
+
+1. Project Overview
+2. Technology Stack
+3. Project Structure
+4. Key Features
+5. Models and Database Schema
+6. User Roles and Permissions
+7. Authentication and Registration
+8. Dashboards and Navigation
+9. Car Management
+10. Loan Management
+11. Service Requests
+12. Transactions
+13. Reports and Departmental Workflows
+14. Admin Interface
+15. Media and Image Handling
+16. How to Add New Features
+17. Deployment and Settings
+18. Troubleshooting and Common Errors
+19. Further Reading and Resources
+
+---
+
+1. Project Overview
+
+Wheels and Deals is a Django-based web application for managing a car dealership. It supports multiple user roles (Admin, Employee, Customer), department-based workflows (Finance, Services, Sales), car inventory management, loan applications, service requests, transaction tracking, and reporting. The system is designed to be modular, extensible, and user-friendly for both staff and customers.
+
+---
+
+2. Technology Stack
+
+- Backend: Python 3, Django 5.x
+- Database: MySQL (configurable), SQLite (for development)
+- Frontend: Django Templates, Bootstrap 5
+- Admin: Django Admin
+- Media: External image URLs for car images
+
+---
+
+3. Project Structure
+
+cardealership/
+│
+├── cardealership/         # Project settings and root URLs
+│   ├── settings.py
+│   ├── urls.py
+│   └── ...
+│
+├── core/                  # Main app
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── templates/
+│   │   └── core/
+│   ├── urls.py
+│   └── views.py
+│
+├── manage.py
+└── db.sqlite3 / MySQL
+
+---
+
+4. Key Features
+
+- User registration and login with role and department selection
+- Role-based dashboards for Admin, Employee (Finance, Services, Sales), and Customer
+- Car inventory management with image URLs
+- Loan application and management
+- Service request and management
+- Transaction tracking
+- Departmental reporting (Finance, Services, Sales) to Admin
+- Django Admin for full data management
+
+---
+
+5. Models and Database Schema
+
+User
+- Extends Django's AbstractUser
+- Fields: username, email, first_name, last_name, phone_number, address, role (ADMIN, EMPLOYEE, CUSTOMER)
+
+Department
+- Name (Finance, Services, Sales)
+- Description
+
+Employee
+- One-to-one with User
+- ForeignKey to Department
+- Position, hire_date, salary, is_active
+
+Customer
+- One-to-one with User
+- Credit score, created_at
+
+Car
+- Make, model, year, price, mileage, condition, status (AVAILABLE, SOLD, IN_SERVICE)
+- image_url (external image link)
+- created_at
+
+Loan
+- ForeignKey to Customer and Car
+- Amount, interest_rate, term_months, status (PENDING, APPROVED, REJECTED)
+- created_at
+
+Service
+- ForeignKey to Car and Customer
+- Service type, description, cost, status (PENDING, IN_PROGRESS, COMPLETED)
+- created_at
+
+CarTransaction
+- ForeignKey to Car and Customer
+- Transaction type (PURCHASE, SALE), amount, transaction_date
+
+Report
+- Type (SALES, FINANCE, SERVICES)
+- Title, content, created_by (User), department (Department), created_at
+
+---
+
+6. User Roles and Permissions
+
+- Admin: Full access to all data, can manage users, cars, loans, services, transactions, and reports.
+- Employee: Assigned to a department (Finance, Services, Sales). Can access their department dashboard and submit reports.
+- Customer: Can browse cars, apply for loans, request services, and view their own transactions and service history.
+
+---
+
+7. Authentication and Registration
+
+- Registration form allows users to select their role (Admin, Employee, Customer).
+- If Employee, user selects a department.
+- Upon registration:
+  - Customer: A Customer profile is created.
+  - Employee: An Employee profile is created and linked to a department.
+- Login redirects users to their role-appropriate dashboard.
+
+---
+
+8. Dashboards and Navigation
+
+- Home page redirects to the appropriate dashboard based on user role.
+- Customer Dashboard: Shows loans, services, transactions.
+- Employee Dashboard: Shows department reports, "Send Report" button.
+- Admin Dashboard: Shows overall stats, employee management, reports.
+
+---
+
+9. Car Management
+
+- Cars can be added, edited, and deleted by Admins in the Django admin.
+- Each car has an external image URL, displayed as a thumbnail in admin and on the site.
+- Customers can browse available cars and view details.
+
+---
+
+10. Loan Management
+
+- Customers can apply for loans for specific cars.
+- Loan applications include car, amount, interest rate, and term.
+- Admins can view and manage all loans in the admin.
+
+---
+
+11. Service Requests
+
+- Customers can request services for their cars.
+- Service requests include car, service type, description, and cost.
+- Service status can be updated by Admins or Employees.
+
+---
+
+12. Transactions
+
+- When a customer purchases a car, a CarTransaction is created.
+- Transactions are viewable by customers in their dashboard and by admins in the admin.
+
+---
+
+13. Reports and Departmental Workflows
+
+- Employees (Finance, Services, Sales) can submit reports via /employee/report/create/.
+- Reports are linked to the employee's department and user.
+- Admins can view all reports in the admin and by department.
+
+---
+
+14. Admin Interface
+
+- All models are registered in admin.py for easy management.
+- Car images are displayed as thumbnails using the image_url.
+- Admins can manage users, employees, customers, cars, loans, services, transactions, and reports.
+
+---
+
+15. Media and Image Handling
+
+- Car images are not uploaded; instead, an external image URL is stored.
+- In the admin and on the site, images are displayed using the provided URL.
+- No need for media file storage or configuration.
+
+---
+
+16. How to Add New Features
+
+- Add a new page: Create a view in views.py, add a URL in urls.py, and create a template in templates/core/.
+- Add a new model: Edit models.py, run makemigrations and migrate, and register the model in admin.py.
+- Add a new form: Edit forms.py and create a template for the form.
+- Add a new dashboard or workflow: Create a view, template, and URL for the new dashboard.
+
+---
+
+17. Deployment and Settings
+
+- Database: MySQL is recommended for production; SQLite can be used for development.
+- Settings: Configure DATABASES, ALLOWED_HOSTS, and other settings in settings.py.
+- Static files: Use Django's static files system for CSS/JS.
+- Media: Not needed for car images, since URLs are used.
+
+---
+
+18. Troubleshooting and Common Errors
+
+- IntegrityError (duplicate entry): Usually caused by trying to create a profile (Customer/Employee) that already exists. Let signals handle profile creation.
+- RelatedObjectDoesNotExist: User is missing a required profile (Customer/Employee). Ensure profiles are created on registration.
+- TemplateDoesNotExist: The template file is missing or in the wrong location. Check the path and naming.
+- Page not found (404): The URL is not defined in urls.py.
+- Not authorized: User does not have the required role or profile. Check user roles and profiles in the admin.
+
+---
+
+19. Further Reading and Resources
+
+- Django Official Documentation: https://docs.djangoproject.com/en/stable/
+- Django Admin Documentation: https://docs.djangoproject.com/en/stable/ref/contrib/admin/
+- Django Model Reference: https://docs.djangoproject.com/en/stable/topics/db/models/
+- Django Forms: https://docs.djangoproject.com/en/stable/topics/forms/
+- Django User Authentication: https://docs.djangoproject.com/en/stable/topics/auth/
+
+---
+
+Example Workflows
+
+Registering a New Employee
+1. Go to /register/
+2. Select "Employee" as the role.
+3. Select a department (Finance, Services, Sales).
+4. Complete registration.
+5. Log in and access the department dashboard.
+
+Adding a Car
+1. Log in as Admin.
+2. Go to /admin/core/car/add/
+3. Fill in car details and provide an image URL.
+4. Save. The car will appear in the inventory.
+
+Submitting a Report as Employee
+1. Log in as an Employee.
+2. Go to your dashboard.
+3. Click "Send Report to Admin."
+4. Fill out the report form and submit.
+
+---
+
+Final Notes
+
+- The project is modular and can be extended with more features (e.g., notifications, analytics, REST API).
+- Always use the correct user role and profile for each workflow.
+- For any new feature, follow the Django MVT pattern: Model, View, Template.
+
+If you need code samples, diagrams, or have specific questions about any part of the project, just ask! 
